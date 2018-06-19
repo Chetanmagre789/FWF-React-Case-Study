@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="js/react.js"></script>
+    <script src="js/react-dom.js"></script>
+    <script src="js/babel.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="main">
+    </div>
+    <footer>
+        <p>Created by: Chetan Magre</p>
+    </footer>
+    
+    
+    <script type="text/babel">
+    
+        class App extends React.Component{
+            
+        constructor () {
+            super();
+            this.state={
+                username:"chetan",
+                password:"1234",
+                status:false,
+                totalAmount:0
+            }
+        }
+         
+        changeLoginStatus =()=> {
+            
+             this.setState((prevState) => ({
+                status : !prevState.status
+            }));
+        }
+            
+        checkAuthentication =()=> {
+            
+          var  username=document.getElementById("username");
+          var  password=document.getElementById("password");
+            if(this.state.username===username.value && this.state.password===password.value){
+                 console.log("Login successfull");
+                 this.changeLoginStatus();      
+            }else{
+                alert("Invalid UserName or Password");
+            }
+        }
+        
+        makePayment =(amount)=> {
+            
+             this.setState((prevState) => ({
+                totalAmount : prevState.totalAmount+amount
+            }));
+        }
+            
+            render(){
+                
+                 if(this.state.status)
+                   {
+                     if(this.state.totalAmount>0){
+                     return(
+                        <div>
+                            <HeaderComponent username={this.state.username} changeStatus={this.changeLoginStatus}/>
+                            <Payment totalAmount={this.state.totalAmount}/>
+                        </div>
+                    );   
+                    }
+                     return(
+                        <div>
+                            <HeaderComponent username={this.state.username} changeStatus={this.changeLoginStatus}/>
+                            <Product makePayment={this.makePayment}/>
+                        </div>
+                    );
+                   }
+                else
+                return(
+                    <div>
+                    <HeaderComponent username=" "/>
+                    <LoginComponent checkAuth={this.checkAuthentication}/>
+                    </div>
+                    );
+            }
+        }
+
+    
+        class HeaderComponent extends React.Component {
+
+			render() {
+                if(this.props.username===" ")
+				 return (
+                     <div className="header">
+                    <div className="title">Online Shopping Mart</div><div className="headerContent" id="userName"></div>
+					</div>
+                    );
+                else
+                    return(
+                    <div className="header">
+                    <div className="title">Online Shopping Mart</div><div className="headerContent" id="userName"><nav >
+                        <span className="name">{this.props.username}</span>
+						<button onClick={this.props.changeStatus} >Logout</button>
+					</nav></div>
+					</div>
+				);
+                   
+			}
+		}
+    
+    class LoginComponent extends React.Component{
+        
+        render(){
+            return (
+        <div className="form">
+            <label >User Name</label>
+            <input type="text" id="username" name="username" placeholder="Your UserName.."/>
+            <label >Password</label>
+            <input type="password" id="password" name="lastname" placeholder="Your password.."/>
+            <button onClick={this.props.checkAuth} className="loginButton">Login</button>
+        </div>
+
+            );
+        }
+    }
+    
+    class Product extends React.Component {
+			constructor() {
+				super();
+				this.state = {
+					products : [
+						{id: 1, name: 'Fastrack Watch', price: 2000, brand: 'Fastrack',quantity:1},
+						{id: 2, name: 'Rolex Watch', price: 30000, brand: 'Rolex',quantity:1},
+						{id: 3, name: 'Omega Watch', price: 5000, brand: 'Omega',quantity:1},
+						{id: 4, name: 'Hublot Watch', price: 5000, brand: 'Hublot',quantity:1},
+						{id: 5, name: 'Bravia LED TV', price: 47000, brand: 'Sony',quantity:1},
+						{id: 6, name: 'Sound System DAtoms', price: 13000, brand: 'Sony',quantity:1},
+						{id: 7, name: 'Xperia ZXL', price: 37000, brand: 'Sony',quantity:1}
+					],
+
+					productsAddedToCart: []
+				};
+			}
+
+			addProductToCartById(id) {  
+                
+				for (var i = 0; i < this.state.products.length; i++) {
+                    if(this.state.products[i].id == id){                        
+                        this.state.productsAddedToCart.push(this.state.products[i]);
+				    	this.setState({
+							productsAddedToCart: this.state.productsAddedToCart
+						});
+				    }
+				}
+			}
+            removeProductFromCartById(id){
+                for (var i = 0; i < this.state.products.length; i++) {
+				    if(this.state.products[i].id == id){
+				    	this.state.productsAddedToCart.pop(this.state.products[i]);
+				    	this.setState({
+							productsAddedToCart: this.state.productsAddedToCart
+						});
+				    }
+				}
+            }
+            
+            checkOutCart=()=>{
+                var totalAmount=0;
+                for (var i = 0; i < this.state.productsAddedToCart.length; i++) {
+				  	totalAmount=totalAmount+this.state.productsAddedToCart[i].price;
+				}
+                this.props.makePayment(totalAmount);
+            }
+            
+			render() {
+				return(
+					<div className="display-flex">
+						<div className="flex-1">
+							<h1 >Products</h1>
+						    {this.state.products.map((item, index) => (
+						       <DisplayProductList 
+						       		key={index}
+						       		name={item.name} 
+						       		price={`Rs. ` + item.price + `/- only`}
+						       		brand={item.brand}
+						       		addProductToCartById={(id) => { this.addProductToCartById(item.id); }}
+						       />
+						    ))}
+						</div>
+
+						<div className="flex-1">
+							<h1 >Products Added To Cart</h1>
+						    {this.state.productsAddedToCart.map((item, index) => (
+						       <DisplayProductListInCart 
+						       		key={index}
+						       		name={item.name} 
+						       		price={`Rs. ` + item.price + `/- only`}
+						       		brand={item.brand}
+						       		removeProductFromCartById={(id)=>{this.removeProductFromCartById(item.id);}}
+						       />
+						    ))}
+						    <button onClick={this.checkOutCart}>CheckOut {this.showTotalAmount}</button>
+						</div>
+					</div>
+					
+				);
+			}
+
+		}
+
+    class DisplayProductList extends React.Component {
+			render() {
+				return(					
+					<div className="product"> 
+                            <div className="display-flex">
+			                    <div className="flex-1">
+			                         <h4 >{this.props.name}</h4>
+			                         <p >{this.props.brand}</p>
+			                         <p >{this.props.price}</p>
+			                         <button onClick={this.props.addProductToCartById} >ADD TO CART</button>
+			                    </div>
+			                </div>
+			        </div>					
+				);
+			}
+		}
+    class DisplayProductListInCart extends React.Component {
+			render() {
+				return(					
+					<div className="product"> 
+                             <div className="display-flex">
+			                    <div className="flex-1">
+			                         <h4 >{this.props.name}</h4>
+			                         <p >{this.props.brand}</p>
+			                         <p >{this.props.price}</p>
+			                         <button onClick={this.props.removeProductFromCartById} >Remove</button>
+			                    </div>
+                             </div>
+			        </div>					
+				);
+			}
+		}
+
+    class Payment extends React.Component {
+        render() {
+            return (
+                <div className="display-flex">
+						<div className="flex-1">
+                            <div className="payment"><h3>Total Amount : {this.props.totalAmount}</h3></div>
+                        </div>
+                </div>
+            );
+        }
+    } 
+        
+    ReactDOM.render(<App/>, document.getElementById('main'));
+    </script>
+</body>
+</html>

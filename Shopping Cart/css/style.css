@@ -1,0 +1,119 @@
+.header{
+    display: flex;
+    background-color: black;
+    color: white;
+    margin: 0%;
+    padding: 1%;
+}
+
+footer{
+    background-color: black;
+    color: white;
+    padding: 1px;
+    position: fixed;
+    bottom: 2px;
+    width: 100%;
+    text-align: center;
+}
+
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: black;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+button:hover {
+    background-color: whitesmoke;
+    color: black
+}
+
+button:active {
+  background-color: whitesmoke;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.title{
+    flex: 1;
+    font-size: 35px;
+}
+
+.headerContent{
+    flex: 1;
+    text-align: right;
+    
+    
+}
+.name{
+    font-size: 20px;
+    padding-right: 15px;
+}
+.main{
+    margin: 0 auto;
+}
+.display-flex{
+    display: flex;
+}
+.flex-1{
+    flex: 1;
+}
+.product {
+    margin-right: 5%;
+    margin-bottom: 5%;
+    padding:2% 1%;
+}
+
+
+
+input[type=text] ,[type=password]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form {
+    border-radius: 5px;
+    padding: 20px;
+    width: 30%;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+
+.loginButton {
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: black;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.loginButton:hover {
+    background-color: whitesmoke;
+    color: black
+}
+
+.loginButton:active {
+  background-color: whitesmoke;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+.payment{
+    text-align: center
+    margin: 0 auto;
+}
