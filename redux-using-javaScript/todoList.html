@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+     <script>
+    
+    function reducer(state, action){
+        var _state=state;
+        switch(action.type){
+            case 'ADD' : { _state.push({name:action.payload, date:new Date()}) } break; 
+                 
+            case 'DELETE' : { _state.splice(action.payload, 1);} break;
+                
+            default : _state;
+        }
+        
+        return _state;
+    }
+        
+        
+    function createStore(_reducer){
+        var state=[];
+        var _listener=[];
+        
+        function getState(){
+            return state;
+        }
+        
+        function dispatch(action){
+            state=_reducer(state, action);
+            _listener.forEach(function(listener){
+                listener();                  
+            })
+        }
+        
+        function subscribe(listener){
+            _listener.push(listener);
+        }
+        
+        return {dispatch,getState,subscribe}
+    }    
+        
+    var store = createStore(reducer);
+    
+    store.subscribe(showList);    
+        
+    function Add(){
+        var todo =document.getElementById("inputTodo");
+        store.dispatch({type:'ADD',payload:todo.value});
+    }
+    function Delete(event){
+        id=event.target.id;
+        store.dispatch({type:'DELETE',payload:id});
+    }
+        
+    function showList(){
+        todos=store.getState();
+        listUL=document.getElementById("List");
+        listUL.innerHTML='';
+        if(todos.length>0){
+            todos.forEach(function(todo){
+                listLI=document.createElement('li');
+                button=document.createElement('button');
+                button.setAttribute('onclick','Delete(event)');
+                button.innerHTML="Delete";
+                button.id=store.getState().indexOf(todo);
+                listLI.innerHTML='  '+todo.name+'  '+todo.date+'  ';
+                listLI.append(button);
+                listUL.appendChild(listLI);  
+            }) 
+        }
+    }   
+    </script>
+</head>
+<body>
+    <div>
+        <div>
+            <input id="inputTodo" type="text" placeholder="Enter Todo"/><button onclick="Add()">Add Todo</button>
+        </div>
+        <ul id="List">
+        </ul>
+        
+    </div>
+</body>
+</html>

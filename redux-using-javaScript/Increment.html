@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script>
+    
+    function reducer(state, action){
+        var _state=state;
+        switch(action.type){
+            case 'INCREMENT' : ++_state; break; 
+                 
+            case 'DECREMNET' : --_state; break;
+                
+            default : _state;
+        }
+        
+        return _state;
+    }
+        
+        
+    function createStore(_reducer){
+        var state=0;
+        var _listener=[];
+        
+        function getState(){
+            return state;
+        }
+        
+        function dispatch(action){
+            state=_reducer(state, action);
+            _listener.forEach(function(listener){
+                listener();                  
+            })
+        }
+        
+        function subscribe(listener){
+            _listener.push(listener);
+        }
+        
+        return {dispatch,getState,subscribe}
+    }    
+        
+    var store = createStore(reducer);
+    
+    store.subscribe(showCounter);    
+        
+    function increment(){
+        store.dispatch({type:'INCREMENT'});
+    }
+    function decrement(){
+        store.dispatch({type:'DECREMNET'});
+    }
+        
+    function showCounter(){
+        document.getElementById("counter").innerHTML=store.getState();
+    }
+        
+    </script>
+</head>
+<body>
+    <div>
+        <button onclick="increment()">Increment</button>
+        <div id="counter"></div>
+        <button onclick="decrement()">Decrement</button>
+    </div>
+</body>
+</html>
